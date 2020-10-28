@@ -48,20 +48,28 @@ public class GornerTableCellRenderer implements TableCellRenderer {
         String formattedDouble = formatter.format(value);
         // Установить текст надписи равным строковому представлению числа
         label.setText(formattedDouble);
-        if(col==1 && needle!=null&& needle.equals(formattedDouble)) {
+        if(col==1 && needle!=null && needle.equals(formattedDouble)) {
             // Номер столбца = 1 (т.е. второй столбец)//
             // + иголка не null(т.е. мы что-то ищем)//
             // + значение иголки совпадает со значением ячейки таблицы -//
             // окрасить задний фон панели в красный цвет
             panel.setBackground(Color.RED);
         }
-        // Иначе -в обычный белый
+        else if (col==2 && needle!=null && needle.equals(formattedDouble)){
+            String str = formattedDouble;
+            int temp = Integer.parseInt (str);
+            if(temp % 2 == 0){
+                panel.setBackground(Color.BLUE);
+            }
+            else panel.setBackground(Color.WHITE);
+        }
         else{
             panel.setBackground(Color.WHITE);
         }
         return  panel;
     }
     public void setNeedle(String needle) {
+
         this.needle= needle;
     }
 }
