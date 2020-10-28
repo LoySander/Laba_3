@@ -97,6 +97,9 @@ public class MainFrame extends JFrame {
                 information.add(Box.createVerticalStrut(10));
                 information.add(group);
                 information.add(Box.createVerticalGlue());
+                JOptionPane.showMessageDialog(MainFrame.this,
+                        information, "" +
+                                "Сведение об авторе", JOptionPane.INFORMATION_MESSAGE);
             }
         };
         informationItem=aboutMenu.add(aboutProgram);
