@@ -44,6 +44,7 @@ public class MainFrame extends JFrame {
     private JFileChooser fileChooser= null;
     // Элемент меню
     private JMenuItem saveToTextMenuItem;
+    private JMenuItem informationItem;
     private JMenuItem saveToGraphicsMenuItem;
     private JMenuItem searchValueMenuItem;
     // Поля ввода для считывания значений переменных
@@ -78,7 +79,30 @@ public class MainFrame extends JFrame {
         // Добавить его в главное меню
         menuBar.add(tableMenu);
 
-        
+        JMenu referenceMenu = new JMenu("Справка"); //Создаю пункт Справка и добавляю его в меню
+        menuBar.add(referenceMenu);
+
+        JMenu aboutMenu = new JMenu("О программе");
+        referenceMenu.add(aboutMenu);
+
+        // создаю новое действие
+        Action aboutProgram = new AbstractAction("Сведение об авторе") {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                Box information=Box.createVerticalBox();
+                JLabel author = new JLabel("Мазур Станислав Валерьевич");
+                JLabel group = new JLabel("группа 6");
+                information.add(Box.createVerticalGlue());
+                information.add(author);
+                information.add(Box.createVerticalStrut(10));
+                information.add(group);
+                information.add(Box.createVerticalGlue());
+            }
+        };
+        informationItem=aboutMenu.add(aboutProgram);
+        informationItem.setEnabled(true);
+
+
         // Создать новое "действие" по сохранению в текстовый файл
         Action saveToTextAction = new AbstractAction("Сохранить в текстовый файл") {
             public void actionPerformed(ActionEvent event) {
