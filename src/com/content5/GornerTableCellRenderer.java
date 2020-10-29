@@ -53,15 +53,16 @@ public class GornerTableCellRenderer implements TableCellRenderer {
             // + иголка не null(т.е. мы что-то ищем)//
             // + значение иголки совпадает со значением ячейки таблицы -//
             // окрасить задний фон панели в красный цвет
-            panel.setBackground(Color.RED);
+            panel.setBackground(Color.YELLOW);
         }
-        else if (col==2 && needle!=null && needle.equals(formattedDouble)){
+        else if (col==1 || col==0){
             String str = formattedDouble;
             int temp = Integer.parseInt (str);
+            System.out.println(temp);
             if(temp % 2 == 0){
-                panel.setBackground(Color.BLUE);
+                panel.setBackground(Color.GREEN);
             }
-            else panel.setBackground(Color.WHITE);
+            else panel.setBackground(Color.RED);
         }
         else{
             panel.setBackground(Color.WHITE);

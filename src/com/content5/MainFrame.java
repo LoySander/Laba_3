@@ -16,22 +16,7 @@ import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 
-import javax.swing.AbstractAction;
-import javax.swing.Action;
-import javax.swing.BorderFactory;
-import javax.swing.Box;
-import javax.swing.JButton;
-import javax.swing.JFileChooser;
-import javax.swing.JFrame;
-import javax.swing.JLabel;
-import javax.swing.JMenu;
-import javax.swing.JMenuBar;
-import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTable;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 public class MainFrame extends JFrame {
     private  static final int WIDTH= 700;
@@ -52,6 +37,7 @@ public class MainFrame extends JFrame {
     private JTextField textFieldTo;
     private JTextField textFieldStep;
     private Box hBoxResult;
+    private  Box hBoxRange;
     // Визуализатор ячеек таблицы
     private GornerTableCellRenderer renderer= new GornerTableCellRenderer();
     // Модель данных с результатами вычислений
@@ -99,7 +85,8 @@ public class MainFrame extends JFrame {
                 information.add(Box.createVerticalGlue());
                 JOptionPane.showMessageDialog(MainFrame.this,
                         information, "" +
-                                "Сведение об авторе", JOptionPane.INFORMATION_MESSAGE);
+                                "Сведение об авторе", JOptionPane.INFORMATION_MESSAGE, new ImageIcon("I.jpg"));
+
             }
         };
         informationItem=aboutMenu.add(aboutProgram);
@@ -122,10 +109,25 @@ public class MainFrame extends JFrame {
                     saveToTextFile(fileChooser.getSelectedFile());
             }
         };
+
         // Добавить соответствующий пункт подменю в меню "Файл"
         saveToTextMenuItem = fileMenu.add(saveToTextAction);
         // По умолчанию пункт меню является недоступным(данных ещё нет)
         saveToTextMenuItem.setEnabled(false);
+        Action saveToGraphicsAction= new AbstractAction("Сохранить данные для построения графика") {
+            public void actionPerformed(ActionEvent event)
+         {
+             if(fileChooser==null) {
+            fileChooser= new JFileChooser();// и инициализировать текущей директорией
+            fileChooser.setCurrentDirectory(new File("."));}
+            // Показать диалоговое окно
+            if(fileChooser.showSaveDialog(MainFrame.this)==JFileChooser.APPROVE_OPTION);
+            // Если результат его показа успешный, // сохранить данные в двоичный файл
+            saveToGraphicsFile(fileChooser.getSelectedFile());
+        }};
+    // Добавить соответствующий пункт подменю в меню "Файл"
+    saveToGraphicsMenuItem = fileMenu.add(saveToGraphicsAction);
+    saveToGraphicsMenuItem.setEnabled(false);
 
         // Создать новое действие по поиску значений многочлена
         Action searchValueAction = new AbstractAction("Найти значение многочлена") {
@@ -141,6 +143,41 @@ public class MainFrame extends JFrame {
         searchValueMenuItem = tableMenu.add(searchValueAction);
         // По умолчанию пункт меню является недоступным (данных ещё нет)
         searchValueMenuItem.setEnabled(false);
+
+        JLabel labelForFrom= new JLabel("X изменяется на интервале от:");
+        // Создать текстовое поле для ввода значения длиной в 10 символов // со значением по умолчанию 0.0
+        textFieldFrom= new JTextField("0.0", 10);
+        // Установить максимальный размер равный предпочтительному, чтобы // предотвратить увеличение размера поля ввода
+        textFieldFrom.setMaximumSize(textFieldFrom.getPreferredSize());// Создать подпись для ввода левой границы отрезка
+        JLabel labelForTo = new JLabel("до:");// Создать текстовое поле для ввода значения длиной в 10 символов // со значением по умолчанию 1.0
+        textFieldTo= new JTextField("1.0", 10);// Установить максимальный размер равный предпочтительному, чтобы // предотвратить увеличение размера поля ввода
+        textFieldTo.setMaximumSize(textFieldTo.getPreferredSize());
+        // Создать подпись для ввода шага табулирования
+        JLabel labelForStep = new JLabel("с шагом:");
+        // Создать текстовое поле для ввода значения длиной в 10 символов // со значением по умолчанию 1.0
+        textFieldStep= new JTextField("0.1", 10);// Установить максимальный размер равный предпочтительному, чтобы // предотвратить увеличение размера поля ввода
+        textFieldStep.setMaximumSize(textFieldStep.getPreferredSize());// Создать контейнер 1 типа "коробка с горизонтальной укладкой"
+        hBoxRange= Box.createHorizontalBox();// Задать для контейнера тип рамки "объѐмная"
+        hBoxRange.setBorder(BorderFactory.createBevelBorder(1));// Добавить "клей" C1-H1
+        hBoxRange.add(Box.createHorizontalGlue());// Добавить подпись "От"
+        hBoxRange.add(labelForFrom);// Добавить "распорку" C1-H2
+        hBoxRange.add(Box.createHorizontalStrut(10));// Добавить поле ввода "От"
+        hBoxRange.add(textFieldFrom);// Добавить "распорку" C1-H3
+        hBoxRange.add(Box.createHorizontalStrut(20));// Добавить подпись "До"
+        hBoxRange.add(labelForTo);// Добавить "распорку" C1-H4
+        hBoxRange.add(Box.createHorizontalStrut(10));// Добавить поле ввода "До"
+        hBoxRange.add(textFieldTo);// Добавить "распорку" C1-H5
+        hBoxRange.add(Box.createHorizontalStrut(20));// Добавить подпись "с шагом"
+        hBoxRange.add(labelForStep);// Добавить "распорку" C1-H6
+        hBoxRange.add(Box.createHorizontalStrut(10));// Добавить поле для ввода шага табулирования
+        hBoxRange.add(textFieldStep);// Добавить "клей" C1-H7
+        hBoxRange.add(Box.createHorizontalGlue());
+        hBoxRange.setPreferredSize(new Dimension(
+               new Double(hBoxRange.getMaximumSize().getWidth()).intValue(), new Double(hBoxRange.getMinimumSize().getHeight()).intValue()*2));
+        // Установить область в верхнюю (северную) часть компоновки
+        getContentPane().add(hBoxRange, BorderLayout.NORTH);
+
+
         // Создать кнопку "Вычислить"
         JButton buttonCalc = new JButton("Вычислить");
         // Задать действие на нажатие "Вычислить" и привязать к кнопке
